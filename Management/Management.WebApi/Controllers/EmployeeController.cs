@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Management.Model;
+using Management.Repository;
+using Management.Service;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using Management.Model;
-using Management.Service.Common;
 
 namespace Project.WebApi.Controllers
 {
@@ -10,11 +12,14 @@ namespace Project.WebApi.Controllers
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeeService _employeeService;
+        private readonly string _connectionString;
+        private readonly EmployeeService _employeeService;
 
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IConfiguration configuration)
         {
-            _employeeService = employeeService;
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            var employeeRepository = new EmployeeRepository(_connectionString);
+            _employeeService = new EmployeeService(employeeRepository);
         }
 
         [HttpGet]
@@ -25,7 +30,7 @@ namespace Project.WebApi.Controllers
                 var employees = _employeeService.GetAllEmployees();
                 return Ok(employees);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Internal server error");
             }
@@ -43,7 +48,7 @@ namespace Project.WebApi.Controllers
                 }
                 return Ok(employee);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Internal server error");
             }
@@ -57,7 +62,7 @@ namespace Project.WebApi.Controllers
                 _employeeService.CreateEmployee(employee);
                 return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, employee);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Internal server error");
             }
@@ -76,7 +81,7 @@ namespace Project.WebApi.Controllers
                 _employeeService.UpdateEmployee(employee);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Internal server error");
             }
@@ -90,7 +95,7 @@ namespace Project.WebApi.Controllers
                 _employeeService.DeleteEmployee(id);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Internal server error");
             }
