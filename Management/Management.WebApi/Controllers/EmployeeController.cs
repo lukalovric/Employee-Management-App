@@ -23,11 +23,11 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Employee>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
             try
             {
-                var employees = _employeeService.GetAllEmployees();
+                var employees = await _employeeService.GetAllEmployeesAsync();
                 return Ok(employees);
             }
             catch (Exception)
@@ -37,11 +37,11 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Employee> GetEmployee(Guid id)
+        public async Task<ActionResult<Employee>> GetEmployee(Guid id)
         {
             try
             {
-                var employee = _employeeService.GetEmployeeById(id);
+                var employee = await _employeeService.GetEmployeeByIdAsync(id);
                 if (employee == null)
                 {
                     return NotFound();
@@ -55,11 +55,11 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateEmployee([FromBody] Employee employee)
+        public async Task<IActionResult> CreateEmployee([FromBody] Employee employee)
         {
             try
             {
-                _employeeService.CreateEmployee(employee);
+                await _employeeService.CreateEmployeeAsync(employee);
                 return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, employee);
             }
             catch (Exception)
@@ -69,7 +69,7 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateEmployee(Guid id, [FromBody] Employee employee)
+        public async Task<IActionResult> UpdateEmployee(Guid id, [FromBody] Employee employee)
         {
             if (id != employee.Id)
             {
@@ -78,7 +78,7 @@ namespace Project.WebApi.Controllers
 
             try
             {
-                _employeeService.UpdateEmployee(employee);
+                await _employeeService.UpdateEmployeeAsync(employee);
                 return NoContent();
             }
             catch (Exception)
@@ -88,11 +88,11 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteEmployee(Guid id)
+        public async Task<IActionResult> DeleteEmployee(Guid id)
         {
             try
             {
-                _employeeService.DeleteEmployee(id);
+                await _employeeService.DeleteEmployeeAsync(id);
                 return NoContent();
             }
             catch (Exception)

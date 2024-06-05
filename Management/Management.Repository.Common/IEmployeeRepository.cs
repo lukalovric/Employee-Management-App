@@ -11,11 +11,11 @@ namespace Management.Repository.Common
 
     public interface IEmployeeRepository
     {
-        IEnumerable<Employee> GetAll();
-        Employee GetById(Guid id);
-        void Add(Employee employee);
-        void Update(Employee employee);
-        void Delete(Guid id);
+        Task<IEnumerable<Employee>> GetAllAsync();
+        Task<Employee> GetByIdAsync(Guid id);
+        Task AddAsync(Employee employee);
+        Task UpdateAsync(Employee employee);
+        Task DeleteAsync(Guid id);
     }
 
 }
