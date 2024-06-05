@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Management.Model;
+﻿using Management.Model;
 using Management.Service.Common;
 using Management.Repository.Common;
-
+using Management.Common;
 namespace Management.Service
 {
     public class EmployeeService : IEmployeeService
@@ -17,30 +12,31 @@ namespace Management.Service
         {
             _employeeRepository = employeeRepository;
         }
-        public IEnumerable<Employee> GetAllEmployees()
+
+        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync(Filter filter, Paging paging, Sorting sorting)
         {
-            return _employeeRepository.GetAll();
+            return await _employeeRepository.GetAllAsync(filter, paging, sorting);
         }
 
-        public Employee GetEmployeeById(Guid id)
+        public async Task<Employee> GetEmployeeByIdAsync(Guid id)
         {
-            return _employeeRepository.GetById(id);
+            return await _employeeRepository.GetByIdAsync(id);
         }
 
-        public void CreateEmployee(Employee employee)
+        public async Task CreateEmployeeAsync(Employee employee)
         {
             employee.Id = Guid.NewGuid();
-            _employeeRepository.Add(employee);
+            await _employeeRepository.AddAsync(employee);
         }
 
-        public void UpdateEmployee(Employee employee)
+        public async Task UpdateEmployeeAsync(Employee employee)
         {
-            _employeeRepository.Update(employee);
+            await _employeeRepository.UpdateAsync(employee);
         }
 
-        public void DeleteEmployee(Guid id)
+        public async Task DeleteEmployeeAsync(Guid id)
         {
-            _employeeRepository.Delete(id);
+            await _employeeRepository.DeleteAsync(id);
         }
     }
 }

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Management.Model;
+﻿using Management.Model;
+using Management.Common;
 
 namespace Management.Service.Common
 {
     public interface IEmployeeService
     {
-        IEnumerable<Employee> GetAllEmployees();
-        Employee GetEmployeeById(Guid id);
-        void CreateEmployee(Employee employee);
-        void UpdateEmployee(Employee employee);
-        void DeleteEmployee(Guid id);
+        Task<IEnumerable<Employee>> GetAllEmployeesAsync(Filter filter, Paging paging, Sorting sorting);
+        Task<Employee> GetEmployeeByIdAsync(Guid id);
+        Task CreateEmployeeAsync(Employee employee);
+        Task UpdateEmployeeAsync(Employee employee);
+        Task DeleteEmployeeAsync(Guid id);
     }
 }

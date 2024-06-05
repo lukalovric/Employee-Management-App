@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Management.Model;
+﻿using Management.Model;
+using Management.Common;
 
 namespace Management.Repository.Common
 {
@@ -11,11 +7,11 @@ namespace Management.Repository.Common
 
     public interface IEmployeeRepository
     {
-        IEnumerable<Employee> GetAll();
-        Employee GetById(Guid id);
-        void Add(Employee employee);
-        void Update(Employee employee);
-        void Delete(Guid id);
+        Task<IEnumerable<Employee>> GetAllAsync(Filter filter, Paging paging, Sorting sorting);
+        Task<Employee> GetByIdAsync(Guid id);
+        Task AddAsync(Employee employee);
+        Task UpdateAsync(Employee employee);
+        Task DeleteAsync(Guid id);
     }
 
 }
