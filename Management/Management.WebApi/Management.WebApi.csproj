@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Management.Common\Management.Common.csproj" />
     <ProjectReference Include="..\Management.Model\Management.Model.csproj" />
     <ProjectReference Include="..\Management.Service.Common\Management.Service.Common.csproj" />
     <ProjectReference Include="..\Management.Service\Management.Service.csproj" />

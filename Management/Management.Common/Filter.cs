@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace Management.Common
 {
-    internal class Filter
+    public class Filter
     {
+        public string SearchSurname { get; set; }
+        public string SearchName { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public Guid? ProjectId { get; set; }
     }
+
 }

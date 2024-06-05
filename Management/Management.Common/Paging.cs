@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Management.Common
 {
-    internal class Paging
+    public class Paging
     {
+        public int RecordsPerPage { get; set; }
+        public int PageNumber { get; set; }
     }
 }

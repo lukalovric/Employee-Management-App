@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Management.Model;
+﻿using Management.Model;
 using Management.Service.Common;
 using Management.Repository.Common;
-
+using Management.Common;
 namespace Management.Service
 {
     public class EmployeeService : IEmployeeService
@@ -18,9 +13,9 @@ namespace Management.Service
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync(Filter filter, Paging paging, Sorting sorting)
         {
-            return await _employeeRepository.GetAllAsync();
+            return await _employeeRepository.GetAllAsync(filter, paging, sorting);
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(Guid id)

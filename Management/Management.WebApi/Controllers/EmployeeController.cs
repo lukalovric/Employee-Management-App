@@ -2,9 +2,7 @@
 using Management.Repository;
 using Management.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
+using Management.Common;
 
 namespace Project.WebApi.Controllers
 {
@@ -23,11 +21,32 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees(string searchSurname = "", string searchName = "", DateTime? startDate = null, DateTime? endDate = null, Guid? ProjectId = null, int rpp = 3, int pageNumber = 1, string orderBy = "CreatedAt", string sortOrder = "ASC")
         {
             try
             {
-                var employees = await _employeeService.GetAllEmployeesAsync();
+                var filter = new Filter
+                {
+                    SearchSurname = searchSurname,
+                    SearchName = searchName,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    ProjectId = ProjectId
+                };
+
+                var paging = new Paging
+                {
+                    RecordsPerPage = rpp,
+                    PageNumber = pageNumber
+                };
+
+                var sorting = new Sorting
+                {
+                    OrderBy = orderBy,
+                    SortOrder = sortOrder
+                };
+
+                var employees = await _employeeService.GetAllEmployeesAsync(filter, paging, sorting);
                 return Ok(employees);
             }
             catch (Exception)
