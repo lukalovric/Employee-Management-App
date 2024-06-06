@@ -1,8 +1,10 @@
-﻿using Management.Model;
-using Management.Repository;
-using Management.Service;
+﻿using Management.Common;
+using Management.Model;
+using Management.Service.Common;
 using Microsoft.AspNetCore.Mvc;
-using Management.Common;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Project.WebApi.Controllers
 {
@@ -10,41 +12,25 @@ namespace Project.WebApi.Controllers
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
-        private readonly string _connectionString;
-        private readonly EmployeeService _employeeService;
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeeController(IConfiguration configuration)
+        public EmployeeController(IEmployeeService employeeService)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
-            var employeeRepository = new EmployeeRepository(_connectionString);
-            _employeeService = new EmployeeService(employeeRepository);
+            _employeeService = employeeService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees(string searchSurname = "", string searchName = "", DateTime? startDate = null, DateTime? endDate = null, Guid? ProjectId = null, int rpp = 3, int pageNumber = 1, string orderBy = "CreatedAt", string sortOrder = "ASC")
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees(
+            string searchSurname = "", string searchName = "",
+            DateTime? startDate = null, DateTime? endDate = null,
+            Guid? ProjectId = null, int rpp = 3, int pageNumber = 1,
+            string orderBy = "CreatedAt", string sortOrder = "ASC")
         {
             try
             {
-                var filter = new Filter
-                {
-                    SearchSurname = searchSurname,
-                    SearchName = searchName,
-                    StartDate = startDate,
-                    EndDate = endDate,
-                    ProjectId = ProjectId
-                };
-
-                var paging = new Paging
-                {
-                    RecordsPerPage = rpp,
-                    PageNumber = pageNumber
-                };
-
-                var sorting = new Sorting
-                {
-                    OrderBy = orderBy,
-                    SortOrder = sortOrder
-                };
+                var filter = new Filter { SearchSurname = searchSurname, SearchName = searchName, StartDate = startDate, EndDate = endDate, ProjectId = ProjectId };
+                var paging = new Paging { RecordsPerPage = rpp, PageNumber = pageNumber };
+                var sorting = new Sorting { OrderBy = orderBy, SortOrder = sortOrder };
 
                 var employees = await _employeeService.GetAllEmployeesAsync(filter, paging, sorting);
                 return Ok(employees);
