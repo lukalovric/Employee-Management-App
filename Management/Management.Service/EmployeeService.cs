@@ -13,6 +13,7 @@ namespace Management.Service
             _employeeRepository = employeeRepository;
         }
 
+
         public async Task<IEnumerable<Employee>> GetAllEmployeesAsync(Filter filter, Paging paging, Sorting sorting)
         {
             return await _employeeRepository.GetAllAsync(filter, paging, sorting);

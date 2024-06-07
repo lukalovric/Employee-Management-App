@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.0.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Management.Common\Management.Common.csproj" />
     <ProjectReference Include="..\Management.Model\Management.Model.csproj" />
     <ProjectReference Include="..\Management.Repository.Common\Management.Repository.Common.csproj" />
-    <ProjectReference Include="..\Management.Repository\Management.Repository.csproj" />
     <ProjectReference Include="..\Management.Service.Common\Management.Service.Common.csproj" />
   </ItemGroup>
 
