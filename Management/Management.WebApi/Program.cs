@@ -8,19 +8,17 @@ using Management.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register services in the IServiceCollection
 builder.Services.AddControllers();
 
-// Add Autofac
+
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-// Configure Autofac
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
-    // Register your types
+
     containerBuilder.RegisterType<EmployeeRepository>()
                     .As<IEmployeeRepository>()
                     .WithParameter("connectionString", connectionString)
@@ -33,7 +31,6 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
