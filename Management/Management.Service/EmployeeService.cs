@@ -30,9 +30,9 @@ namespace Management.Service
             await _employeeRepository.AddAsync(employee);
         }
 
-        public async Task UpdateEmployeeAsync(Employee employee)
+        public async Task UpdateEmployeeAsync(Guid id, Employee employee)
         {
-            await _employeeRepository.UpdateAsync(employee);
+            await _employeeRepository.UpdateAsync(id, employee);
         }
 
         public async Task DeleteEmployeeAsync(Guid id)

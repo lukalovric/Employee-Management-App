@@ -8,7 +8,7 @@ namespace Management.Service.Common
         Task<IEnumerable<Employee>> GetAllEmployeesAsync(Filter filter, Paging paging, Sorting sorting);
         Task<Employee> GetEmployeeByIdAsync(Guid id);
         Task CreateEmployeeAsync(Employee employee);
-        Task UpdateEmployeeAsync(Employee employee);
+        Task UpdateEmployeeAsync(Guid id, Employee employee);
         Task DeleteEmployeeAsync(Guid id);
     }
 }

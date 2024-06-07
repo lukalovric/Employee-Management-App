@@ -135,10 +135,10 @@ namespace Management.Repository
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task UpdateAsync(Employee employee)
+        public async Task UpdateAsync(Guid id, Employee employee)
         {
             // First, retrieve the existing employee from the database
-            var existingEmployee = await GetByIdAsync(employee.Id);
+            var existingEmployee = await GetByIdAsync(id);
 
             if (existingEmployee == null)
             {
@@ -158,13 +158,13 @@ namespace Management.Repository
             {
                 existingEmployee.Position = employee.Position;
             }
-            if (employee.Salary != 0)
+            if (employee.Salary != null)
             {
                 existingEmployee.Salary = employee.Salary;
             }
 
             await using var conn = new NpgsqlConnection(_connectionString);
-            await conn.OpenAsync();
+            conn.Open();
             await using var cmd = new NpgsqlCommand("UPDATE \"Employee\" SET \"FirstName\" = @FirstName, \"LastName\" = @LastName, \"Position\" = @Position, \"Salary\" = @Salary WHERE \"Id\" = @Id", conn);
             cmd.Parameters.AddWithValue("Id", existingEmployee.Id);
             cmd.Parameters.AddWithValue("FirstName", existingEmployee.FirstName);
@@ -172,6 +172,7 @@ namespace Management.Repository
             cmd.Parameters.AddWithValue("Position", existingEmployee.Position);
             cmd.Parameters.AddWithValue("Salary", existingEmployee.Salary);
             await cmd.ExecuteNonQueryAsync();
+            conn.Close();
         }
 
 
