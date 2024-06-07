@@ -21,66 +21,66 @@ namespace Management.Repository
         {
             var employees = new List<Employee>();
 
+            if (filter == null)
+            {
+                filter = new Filter();
+            }
+            if (paging == null)
+            {
+                paging = new Paging { RecordsPerPage = 10, PageNumber = 1 };
+            }
+            if (sorting == null)
+            {
+                sorting = new Sorting { OrderBy = "CreatedAt", SortOrder = "ASC" };
+            }
+
             var query = new StringBuilder("SELECT \"Id\", \"FirstName\", \"LastName\", \"Position\", \"Salary\", \"CreatedAt\" FROM \"Employee\" WHERE 1=1");
-
-            if (!string.IsNullOrEmpty(filter.SearchSurname))
-            {
-                query.Append(" AND \"LastName\" ILIKE @SearchSurname");
-            }
-
-            if (!string.IsNullOrEmpty(filter.SearchName))
-            {
-                query.Append(" AND \"FirstName\" ILIKE @SearchName");
-            }
-
-            if (filter.StartDate.HasValue)
-            {
-                query.Append(" AND \"CreatedAt\" >= @StartDate");
-            }
-
-            if (filter.EndDate.HasValue)
-            {
-                query.Append(" AND \"CreatedAt\" <= @EndDate");
-            }
-
-            if (filter.ProjectId.HasValue)
-            {
-                query.Append(" AND \"ProjectId\" = @ProjectId");
-            }
-
-            query.Append($" ORDER BY \"{sorting.OrderBy}\" {sorting.SortOrder}");
-
-            query.Append(" OFFSET @Offset LIMIT @Limit");
 
             await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
             await using var cmd = new NpgsqlCommand(query.ToString(), conn);
 
-            if (!string.IsNullOrEmpty(filter.SearchSurname))
+            if (!string.IsNullOrEmpty(filter.SearchSurname) ||
+                !string.IsNullOrEmpty(filter.SearchName) ||
+                filter.StartDate.HasValue ||
+                filter.EndDate.HasValue ||
+                filter.ProjectId.HasValue)
             {
-                cmd.Parameters.AddWithValue("SearchSurname", $"%{filter.SearchSurname}%");
+                if (!string.IsNullOrEmpty(filter.SearchSurname))
+                {
+                    query.Append(" AND \"LastName\" ILIKE @SearchSurname");
+                    cmd.Parameters.AddWithValue("SearchSurname", $"%{filter.SearchSurname}%");
+                }
+
+                if (!string.IsNullOrEmpty(filter.SearchName))
+                {
+                    query.Append(" AND \"FirstName\" ILIKE @SearchName");
+                    cmd.Parameters.AddWithValue("SearchName", $"%{filter.SearchName}%");
+                }
+
+                if (filter.StartDate.HasValue)
+                {
+                    query.Append(" AND \"CreatedAt\" >= @StartDate");
+                    cmd.Parameters.AddWithValue("StartDate", filter.StartDate.Value);
+                }
+
+                if (filter.EndDate.HasValue)
+                {
+                    query.Append(" AND \"CreatedAt\" <= @EndDate");
+                    cmd.Parameters.AddWithValue("EndDate", filter.EndDate.Value);
+                }
+
+                if (filter.ProjectId.HasValue)
+                {
+                    query.Append(" AND \"ProjectId\" = @ProjectId");
+                    cmd.Parameters.AddWithValue("ProjectId", filter.ProjectId.Value);
+                }
             }
 
-            if (!string.IsNullOrEmpty(filter.SearchName))
-            {
-                cmd.Parameters.AddWithValue("SearchName", $"%{filter.SearchName}%");
-            }
+            query.Append($" ORDER BY \"{sorting.OrderBy}\" {sorting.SortOrder}");
+            query.Append(" OFFSET @Offset LIMIT @Limit");
 
-            if (filter.StartDate.HasValue)
-            {
-                cmd.Parameters.AddWithValue("StartDate", filter.StartDate.Value);
-            }
-
-            if (filter.EndDate.HasValue)
-            {
-                cmd.Parameters.AddWithValue("EndDate", filter.EndDate.Value);
-            }
-
-            if (filter.ProjectId.HasValue)
-            {
-                cmd.Parameters.AddWithValue("ProjectId", filter.ProjectId.Value);
-            }
-
+            cmd.CommandText = query.ToString();
             cmd.Parameters.AddWithValue("Offset", (paging.PageNumber - 1) * paging.RecordsPerPage);
             cmd.Parameters.AddWithValue("Limit", paging.RecordsPerPage);
 
@@ -94,11 +94,12 @@ namespace Management.Repository
                     LastName = reader.GetString(2),
                     Position = reader.GetString(3),
                     Salary = reader.GetDouble(4),
-                    CreatedAt = reader.IsDBNull(5) ? (DateTime?)null : (DateTime?)reader.GetDateTime(5)
+                    CreatedAt = reader.IsDBNull(5) ? (DateTime?)null : reader.GetDateTime(5)
                 });
             }
             return employees;
         }
+
 
         public async Task<Employee> GetByIdAsync(Guid id)
         {

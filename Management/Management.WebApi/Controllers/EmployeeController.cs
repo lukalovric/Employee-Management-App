@@ -2,9 +2,6 @@
 using Management.Model;
 using Management.Service.Common;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Project.WebApi.Controllers
 {
@@ -20,15 +17,15 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees(
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployeesAsync(
             string searchSurname = "", string searchName = "",
             DateTime? startDate = null, DateTime? endDate = null,
-            Guid? ProjectId = null, int rpp = 3, int pageNumber = 1,
+            Guid? projectId = null, int rpp = 3, int pageNumber = 1,
             string orderBy = "CreatedAt", string sortOrder = "ASC")
         {
             try
             {
-                var filter = new Filter { SearchSurname = searchSurname, SearchName = searchName, StartDate = startDate, EndDate = endDate, ProjectId = ProjectId };
+                var filter = new Filter { SearchSurname = searchSurname, SearchName = searchName, StartDate = startDate, EndDate = endDate, ProjectId = projectId };
                 var paging = new Paging { RecordsPerPage = rpp, PageNumber = pageNumber };
                 var sorting = new Sorting { OrderBy = orderBy, SortOrder = sortOrder };
 
@@ -42,7 +39,7 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(Guid id)
+        public async Task<ActionResult<Employee>> GetEmployeeAsync(Guid id)
         {
             try
             {
@@ -60,12 +57,12 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEmployee([FromBody] Employee employee)
+        public async Task<IActionResult> CreateEmployeeAsync([FromBody] Employee employee)
         {
             try
             {
                 await _employeeService.CreateEmployeeAsync(employee);
-                return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, employee);
+                return Ok(employee);
             }
             catch (Exception)
             {
@@ -74,7 +71,7 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployee(Guid id, [FromBody] Employee employee)
+        public async Task<IActionResult> UpdateEmployeeAsync(Guid id, [FromBody] Employee employee)
         {
             if (id != employee.Id)
             {
@@ -84,7 +81,7 @@ namespace Project.WebApi.Controllers
             try
             {
                 await _employeeService.UpdateEmployeeAsync(employee);
-                return NoContent();
+                return Ok(employee);
             }
             catch (Exception)
             {
@@ -93,12 +90,12 @@ namespace Project.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmployee(Guid id)
+        public async Task<IActionResult> DeleteEmployeeAsync(Guid id)
         {
             try
             {
                 await _employeeService.DeleteEmployeeAsync(id);
-                return NoContent();
+                return Ok($"Employee with id {id} deleted succesfully");
             }
             catch (Exception)
             {
