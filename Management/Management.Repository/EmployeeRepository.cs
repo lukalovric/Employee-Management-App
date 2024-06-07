@@ -137,16 +137,44 @@ namespace Management.Repository
 
         public async Task UpdateAsync(Employee employee)
         {
+            // First, retrieve the existing employee from the database
+            var existingEmployee = await GetByIdAsync(employee.Id);
+
+            if (existingEmployee == null)
+            {
+                throw new Exception("Employee not found."); // or handle this case based on your application logic
+            }
+
+            // Update the existing employee object with the new values if they are not null
+            if (employee.FirstName != null)
+            {
+                existingEmployee.FirstName = employee.FirstName;
+            }
+            if (employee.LastName != null)
+            {
+                existingEmployee.LastName = employee.LastName;
+            }
+            if (employee.Position != null)
+            {
+                existingEmployee.Position = employee.Position;
+            }
+            if (employee.Salary != 0)
+            {
+                existingEmployee.Salary = employee.Salary;
+            }
+
             await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
             await using var cmd = new NpgsqlCommand("UPDATE \"Employee\" SET \"FirstName\" = @FirstName, \"LastName\" = @LastName, \"Position\" = @Position, \"Salary\" = @Salary WHERE \"Id\" = @Id", conn);
-            cmd.Parameters.AddWithValue("Id", employee.Id);
-            cmd.Parameters.AddWithValue("FirstName", employee.FirstName);
-            cmd.Parameters.AddWithValue("LastName", employee.LastName);
-            cmd.Parameters.AddWithValue("Position", employee.Position);
-            cmd.Parameters.AddWithValue("Salary", employee.Salary);
+            cmd.Parameters.AddWithValue("Id", existingEmployee.Id);
+            cmd.Parameters.AddWithValue("FirstName", existingEmployee.FirstName);
+            cmd.Parameters.AddWithValue("LastName", existingEmployee.LastName);
+            cmd.Parameters.AddWithValue("Position", existingEmployee.Position);
+            cmd.Parameters.AddWithValue("Salary", existingEmployee.Salary);
             await cmd.ExecuteNonQueryAsync();
         }
+
+
 
         public async Task DeleteAsync(Guid id)
         {
