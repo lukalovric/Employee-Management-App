@@ -10,7 +10,7 @@ namespace Management.Repository.Common
         Task<IEnumerable<Employee>> GetAllAsync(Filter filter, Paging paging, Sorting sorting);
         Task<Employee> GetByIdAsync(Guid id);
         Task AddAsync(Employee employee);
-        Task UpdateAsync(Employee employee);
+        Task UpdateAsync(Guid id, Employee employee);
         Task DeleteAsync(Guid id);
     }
 
