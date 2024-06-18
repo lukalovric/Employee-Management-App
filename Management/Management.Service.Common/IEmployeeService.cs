@@ -10,5 +10,5 @@ namespace Management.Service.Common
         Task CreateEmployeeAsync(Employee employee);
         Task UpdateEmployeeAsync(Guid id, Employee employee);
         Task DeleteEmployeeAsync(Guid id);
-    }
+    }   
 }
