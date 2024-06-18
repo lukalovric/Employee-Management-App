@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="create.html">Create Employee</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Employee List</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Position</th>
+                    <th>Salary</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="employee-list">
+                <tr>
+                    <td>Pero</td>
+                    <td>Perić</td>
+                    <td>Developer</td>
+                    <td>70,000€</td>
+                    <td>2021-05-01</td>
+                    <td><a href="view.html?id=1" class="btn">View</a> <a href="update.html?id=1" class="btn">Edit</a></td>
+                </tr>
+                <tr>
+                    <td>Jozo</td>
+                    <td>Jozić</td>
+                    <td>Designer</td>
+                    <td>65,000€</td>
+                    <td>2020-08-15</td>
+                    <td><a href="view.html?id=2" class="btn">View</a> <a href="update.html?id=2" class="btn">Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn" onclick="window.location.href='create.html'">Add Employee</button>
+    </div>
+</body>
+</html>

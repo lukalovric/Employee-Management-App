@@ -10,7 +10,7 @@ namespace Project.WebApi.Controllers
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeeService _employeeService;
+        private readonly IEmployeeService _employeeService; 
         private readonly IMapper _mapper;
 
 
