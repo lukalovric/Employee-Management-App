@@ -15,7 +15,8 @@ const EmployeePage = () => {
     }, []);
 
     useEffect(() => {
-        localStorage.setItem('employees', JSON.stringify(employees));
+        if (employees.length > 0){
+        localStorage.setItem('employees', JSON.stringify(employees));}
     }, [employees]);
 
     const addEmployee = (employee) => {
